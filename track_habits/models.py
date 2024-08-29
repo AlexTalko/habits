@@ -6,25 +6,6 @@ NULLABLE = {'blank': True, 'null': True}
 
 
 class Habit(models.Model):
-    PERIOD_DAILY = 'Ежедневно'
-    PERIOD_MONDAY = 'По понедельникам'
-    PERIOD_TUESDAY = 'По вторникам'
-    PERIOD_WEDNESDAY = 'По средам'
-    PERIOD_THURSDAY = 'По четвергам'
-    PERIOD_FRIDAY = 'По пятницам'
-    PERIOD_SATURDAY = 'По субботам'
-    PERIOD_SUNDAY = 'По воскресеньям'
-
-    PERIOD_CHOICES = (
-        ('daily', 'ежедневно'),
-        ('monday', 'понедельник'),
-        ('tuesday', 'вторник'),
-        ('wednesday', 'среда'),
-        ('thursday', 'четверг'),
-        ('friday', 'пятница'),
-        ('saturday', 'суббота'),
-        ('sunday', 'воскресенье'),
-    )
 
     owner_habit = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, **NULLABLE,
                                     verbose_name='владелец привычки',)
@@ -33,8 +14,6 @@ class Habit(models.Model):
                                   verbose_name='время, когда необходимо выполнять привычку', help_text='HH:MM',)
     action_habit = models.CharField(
         max_length=350, verbose_name='действие, которое представляет собой привычка')
-    period = models.CharField(max_length=20, choices=PERIOD_CHOICES, default=PERIOD_DAILY,
-                              verbose_name='периодичность выполнения привычки',)
     is_pleasant = models.BooleanField(default=False, verbose_name='признак приятной привычки')
     related_habit = models.ForeignKey('self', on_delete=models.SET_NULL, verbose_name='Связанная привычка',
                                       **NULLABLE)

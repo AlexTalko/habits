@@ -46,6 +46,7 @@ class PleasedRewardHabitValidator:
 
 class DurationSecondsValidator:
     """Время выполнения должно быть не больше 120 секунд."""
+
     def __init__(self, field):
         self.field = field
 
@@ -54,3 +55,14 @@ class DurationSecondsValidator:
         if tmp_val is not None and tmp_val > timedelta(seconds=120):
             raise ValidationError('Длительность привычки не может быть больше 120 минут.')
 
+
+class FrequencyValidator:
+    """Частота выполнения не должна превышать 7 дней."""
+
+    def __init__(self, field):
+        self.field = field
+
+    def __call__(self, value):
+        tmp_val = dict(value).get(self.field)
+        if tmp_val is not None and tmp_val > 7:
+            raise ValidationError('Время выполнения не может быть более 7 дней.')
