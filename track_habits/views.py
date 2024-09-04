@@ -15,7 +15,7 @@ class HabitViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, IsOwner]
 
     def perform_create(self, serializer):
-        habit = serializer.save(user_habit=self.request.user)
+        habit = serializer.save(owner_habit=self.request.user)
         habit.save()
 
 
@@ -41,5 +41,5 @@ class HabitOwnListAPIView(generics.ListAPIView):
     pagination_class = HabitPaginator
 
     def get_queryset(self):
-        queryset = self.queryset.filter(user_habit=self.request.user)
+        queryset = self.queryset.filter(owner_habit=self.request.user)
         return queryset
