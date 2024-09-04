@@ -43,4 +43,36 @@ class HabitTest(APITestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
-    # def test_habit_
+    def test_habit_update(self):
+        url = reverse('track_habits:habit_update', args=(self.habit.pk,))
+        data = {
+            'place_habit': 'home test updated',
+            'time_habit': '10:00',
+            'action_habit': 'do test updated',
+            'is_public': True, }
+        response = self.client.put(url, data)
+        self.assertEqual(response.status_code, 200)
+
+    def test_habit_delete(self):
+        url = reverse('track_habits:habit_destroy', args=(self.habit.pk,))
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, 204)
+
+    def test_habit_filter_by_user(self):
+        url = reverse('track_habits:habits_list')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.json()['results']), 1)
+
+
+class HabitValidateTest(APITestCase):
+    """ Тестирование валидаторов Habit. """
+
+    def setUp(self):
+        self.user = self.create_user('test@test.com')
+        self.client.force_authenticate(user=self.user)
+
+    def test_duration_habit(self):
+        habit = self.create_habit(owner_habit=self.user, place_habit='home test', time_habit='25:00',
+                                  action_habit='do test', is_public=True)
+        self.assertEqual(habit.is_valid(), False)
