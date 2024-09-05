@@ -1,4 +1,5 @@
 from django.urls import reverse
+from rest_framework import status
 from rest_framework.test import APITestCase
 
 from track_habits.models import Habit
@@ -68,11 +69,25 @@ class HabitTest(APITestCase):
 class HabitValidateTest(APITestCase):
     """ Тестирование валидаторов Habit. """
 
+    def create_user(self, email):
+        user = User.objects.create(email=email, )
+        user.set_password('test123456')
+        return user
+
+    def create_habit(self, owner_habit, place_habit, time_habit, action_habit, is_public):
+        return Habit.objects.create(owner_habit=owner_habit, place_habit=place_habit, time_habit=time_habit,
+                                    action_habit=action_habit, is_public=is_public)
+
     def setUp(self):
         self.user = self.create_user('test@test.com')
         self.client.force_authenticate(user=self.user)
 
     def test_duration_habit(self):
-        habit = self.create_habit(owner_habit=self.user, place_habit='home test', time_habit='25:00',
-                                  action_habit='do test', is_public=True)
-        self.assertEqual(habit.is_valid(), False)
+        url = reverse('track_habits:habit_create')
+        data = {
+            'place_habit': 'home test',
+            'time_habit': '121:00',
+            'action_habit': 'do test',
+            'is_public': True, }
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
