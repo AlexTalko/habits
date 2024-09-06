@@ -14,7 +14,7 @@ services:
     expose:
       - "5432"
     volumes:
-      - ./db_data:/var/lib/postgresql/data
+      - ./pg_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "-c", "pg_isready -U $POSTGRES_USER"]
       interval: 10s
@@ -62,7 +62,7 @@ services:
       - .env
 
 volumes:
-  db_data:
+  pg_data:
     driver: local
   app:
     driver: local
